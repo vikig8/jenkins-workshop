@@ -131,11 +131,14 @@ Our Java project needs to be packaged into a Jar file, in order to be ready for 
 * Push the change to GitHub, and monitor that Jenkins will grab that change and make a build, producing an artifact.
 
 ### 4.5 Implementing the Gilded Rose
+
 Look in  `src/test/java/net/praqma/codeacademy/gildedrose/TexttestFixture.java` for examples of items to use for tests.
+
 * Make a test and push it, observe it failing
 * Make changes to pass the test and push them, observe as only working code are built to production
 
 ### 5. Making the pipeline script work
+
 Now you have made a really nice pipeline in Jenkins just using the normal jobs.
 Now we want it *as code*!
 
@@ -158,7 +161,7 @@ So take a look at your old build script and transfer the things you did there to
 
 If you cant remember the syntax for creating stages, then here is the hello world example of it:
 
-```
+```groovy
 node {
     stage ('Hello'){
         echo 'Hello World'
@@ -175,6 +178,7 @@ Make three stages that does the following:
 Run this to see that it's working. The archiving part can be verified by looking for a small blue arrow next to the build number in the overview. Make sure you get your Jar file with you there.
 
 ### 7. Archiving
+
 We also need to get the javadoc generated for the project.
 
 Fortunately that can be done with a small `mvn site` command.
@@ -183,6 +187,7 @@ Fortunately that can be done with a small `mvn site` command.
 * Archive the `target/gildedrose-*.jar` as well
 
 ### 8. Dockerize this
+
 Now we have a fully functional pipeline, but it's not very nice to run `mvn` commands directly on the Jenkins machine. These commands can be run inside a docker container and produce the exact same result. Then we won't need to worry about installing and managing Maven versions on our virtual machine.
 
 * Convert your `mvn` steps to run inside docker containers
@@ -194,7 +199,14 @@ Hints
 * Add `--rm` to your `docker run` command to make it delete itself when done executing. This is how you avoid old stopped containers filling up on the machine.
 
 ### 9. Multibranch pipeline
-There is a file in this repository called Jenkinsfile
+
+Having your pipeline as code is good, but having it under version control is better!
+
+Fortuneatly, Jenkins makes this possible.
+
+First of, go in and `Configure` your pipeline job, disabling any build triggers you might have set.
+
+In the root of the repository there is a file called `Jenkinsfile`.
 
 Right now it only has a dumb `hello world`
 
@@ -205,6 +217,10 @@ Right now it only has a dumb `hello world`
 * Trigger it to see that it works.
 * Make a new branch locally, and push it up to GitHub to see that it automatically makes a new pipeline for you as well.
 
+### 10. Pretested integration
+
+Head over to [the pretested readme](pretested/README.md) to fulfill this part of the exercises.
+
 ### Xtra. Parallel and stashing
 Now we have two processes that actually can be run in parallel. The `build` and `javadoc` steps both take in the sourcecode and produces artifacts. So lets try to run them in parallel.
 
@@ -213,7 +229,7 @@ Now we have two processes that actually can be run in parallel. The `build` and 
 * Stash the source code cloned in `Preparation` and call it source
 * `build` and `javadoc` steps needs to be included in a parallel step like the one below
 
-```
+```groovy
 def builders = [
 	"build": {
 		node {}
@@ -231,6 +247,7 @@ stage('parallel'){
 * Stash the results instead of archiving. Call them `jar` and `javadoc`
 * Unstash them in the `Results` step in the end where you archive them.
 
-#DONE!
+# DONE!
+
 **That's it!** You rock at this!
 If you have more time, and want to make a real pipeline with pretested integration, then read our story about [pipeline vs old fashioned jobs](http://www.praqma.com/stories/jenkins-pipeline/) and try to incorporate the script into your own pipeline!
