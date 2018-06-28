@@ -1,16 +1,16 @@
 # Welcome
 This readme have three different parts:
+
 * [The assignemt](#coding-assignment) : if you do not know guilded rose, then read this before starting the programming exercise. If you know it, just skip this.
 * [The setup](#setup) : Installs the tools on you Linux server that you need in order to run the assignment.
 * [The exercises](#exercises) : The Jenkins excercises. When you have done the setup, then start here.
 
-
-# Coding Assignment
+## Coding Assignment
 
 While the purpose is to learn Jenkins, this will be a coding assignment. It is made just to give you some tangible code to work with:
 Remember, this is not a programming exercise, but a Jenkins one; code is only there so you have something to build :)
 
-In a language of your choice, e.g. Java, implement the following functionality.
+This repository comes with a maven based java project from the start, but any language can be used. If you want to, just replace the java code with one of the other languages from (this repository)[https://github.com/emilybache/GildedRose-Refactoring-Kata].
 
 ## Gilded Rose Requirements Specification
 
@@ -49,18 +49,27 @@ for you).
 Just for clarification, an item can never have its Quality increase above 50, however "Sulfuras" is a
 legendary item and as such its Quality is 80 and it never alters.
 
-# Setup
+## Setup
 
 Before this task, we expect you to have been through the basic Jenkins material and have the infrastructure set up from that.
 
-We also at this point need to make sure that jenkins is a member of the docker group so it can execute docker commands
+We also at this point need to make sure that jenkins is a member of the docker group so it can execute docker commands.
+
+If not, then run the following commands:
 
     sudo usermod -aG docker jenkins
     sudo systemctl restart jenkins
 
-# Exercises:
+That should make Jenkins able to spin up docker images.
+
+## Exercises
 
 ### 0. Authenticate Jenkins to GitHub
+
+We want to make Jenkins talk to GitHub, in order for it to push and pull from your repositories. In order to do that, we need to set up an SSH key for the Jenkins server.
+
+Tasks:
+
 * Generate a new SSH key that will be used by Jenkins to prove itself to GitHub, by following the first part of [Generating a new SSH key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)
 * Add the public-key to your GitHub account by following [Adding a new SSH key to your GitHub account](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/)
 * Add the private-key to Jenkins, by opening your Jenkins server, and clicking `Credentials`
@@ -70,184 +79,64 @@ We also at this point need to make sure that jenkins is a member of the docker g
 * Save it.
 
 ### 0.5 Fork the repository
-* Fork of the [Gilded Rose repository](https://github.com/praqma-training/gildedrose) to obtain your own version of the code.
 
-### 1. Create a job and clone git:
-* Go into your Jenkins server and click on the `New Item` button on the left.
-* Name your new job "gilded rose" and choose `Freestyle project` and click OK
-* Under `Source Code Management` choose git, and paste in your git clone URL for this project (Remember to use the _ssh_-url to _your repository_!).
-* Choose the credentials that you have set up in Jenkins to auth it against GitHub.
-* Click `Save` and then the `Build Now` button.
-* Observe that there is a new build in the build history, that hopefully is blue.
-* Clik on it and click on `Console Output` to see something like this on your screen :
-```
-Started by user admin
-Building in workspace /var/jenkins_home/workspace/my first job
- > git rev-parse --is-inside-work-tree # timeout=10
-Fetching changes from the remote Git repository
- > git config remote.origin.url git@github.com:figaw/gildedrose.git # timeout=10
-Fetching upstream changes from git@github.com:figaw/gildedrose.git
- > git --version # timeout=10
-using GIT_SSH to set credentials Test to ssh jenkins access github
- > git fetch --tags --progress git@github.com:figaw/gildedrose.git +refs/heads/*:refs/remotes/origin/*
- > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
- > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
-Checking out Revision 06344e7eb74250449756084692ce55c4e701ce7d (refs/remotes/origin/master)
-Commit message: "Update README.md"
- > git config core.sparsecheckout # timeout=10
- > git checkout -f 06344e7eb74250449756084692ce55c4e701ce7d
-First time build. Skipping changelog.
-Finished: SUCCESS
-```
-**Congratulations, you have now made your first jenkins job!**
+We need you to be able to push changes up to this repository as you go along. Therefore you need your own fork to play with.
 
-### 2. Running a maven test
+* Fork of the [repository](https://github.com/praqma-training/jenkins-workshop) to obtain your own version of the code.
 
-* Click on the `Back to Project` button, and go in and `Configure` the job again.
-* Under the `Build` section, add an `Execute Shell` step and write `docker run -i --rm --name my-maven-project -v "$PWD":/usr/src/mymaven -w /usr/src/mymaven maven:3-jdk-8 mvn test` in it. That will trigger the maven test goal on the project, compiling the java code and running the unit tests.
-* Click save, and build now once more.
-* Go into the console output like last time, and see that maven now actually runs your tests.
+### 1 make a freestyle job
 
-### 3. Scheduling the build
+Head over to the [freestyle readme](freestyle/README.md) and follow the instructions there to setup your first Jenkins job.
 
-As a team, you do not want to go in and manually build the project every time you have some new code commited. _it needs to be automated, right!?!_
-
-* Go into `Configuration` again and select the `Poll SCM` checkbox
-* Type in `* * * * */1` to tell Jenkins to check for new commits every minute.
-* Make a new commit, commenting the test in src/test/java/net/praqma/codeacademy/gildedrose/GildedRoseTest.java
-* Push that change to GitHub, and monitor as Jenkins starts a build automatically.
-* Note that the build fails (because the test is failing) _this is OK_.
-
-### 4. Generating an artifact
-
-Our Java project needs to be packaged into a Jar file, in order to be ready for release.
-
-* Change the maven goal from `test` to `install`.
-* Under `Post-build Actions` add the `Archive the artifacts` action, and write `target/gildedrose-*.jar` in it. That will take the output from the maven goal and add it as an artifact.
-* Choose the advanced options and select `Archive artifacts only if build is successful` as well to reduce the number of artifacts
-* Click save
-* Go back to the job dashboard.
-* Fix the unit test by implementing a dumb way of solving the test.
-* Push the change to GitHub, and monitor that Jenkins will grab that change and make a build, producing an artifact.
-
-### 4.5 Implementing the Gilded Rose
+### 2 Implementing the Gilded Rose
 
 Look in  `src/test/java/net/praqma/codeacademy/gildedrose/TexttestFixture.java` for examples of items to use for tests.
 
 * Make a test and push it, observe it failing
 * Make changes to pass the test and push them, observe as only working code are built to production
 
-### 5. Making the pipeline script work
+Do this a couple of times to get comfortable with how Jenkins schedules and works on commits.
 
-Now you have made a really nice pipeline in Jenkins just using the normal jobs.
-Now we want it *as code*!
+### 3 Dockerize it
 
-First off, we need a new `Pipeline` job.
+Now we have a fully functional pipeline, but it's not very nice to run `mvn` commands directly on the Jenkins machine. 
 
-* Click on `New Item`, choose `Pipeline` type, and give it a name.
-* Head down to the `Pipeline` section of the job, and click on the "try sample pipeline" and choose `Hello world`
-* Save and Build it.
+It requires each node that we are working on have maven installed, and we have nowhere documented what version of Java or Maven that is expected to compile the software.
 
-The result should very well be that you have a blue (succesful) build, and in the main view a text saying the following will appear:
+So we want to run it in a controlled Docker container, making sure it's the same version everywhere and we won't need to worry about installing or managing Maven versions on our build nodes.
 
->This Pipeline has run successfully, but does not define any stages. Please use the stage step to define some stages in this Pipeline.
-
-We have to look into that now, *don't we?*
-
-### 6. Convert your pipeline
-
-In pipeline, we like `stages` as they give us the ability to see where in the process things are going wrong.
-So take a look at your old build script and transfer the things you did there to the jenkins script.
-
-If you cant remember the syntax for creating stages, then here is the hello world example of it:
-
-```groovy
-node {
-    stage ('Hello'){
-        echo 'Hello World'
-    }
-}
-```
-
-Make three stages that does the following:
-
-* `Preparation`: Clone the repository from git.
-* `Build` : Executes maven `clean package`
-* `Results` :  Make jUnit display the results of `**/target/surefire-reports/TEST-*.xml`, and archive the generated jar file in the `target` folder
-
-Run this to see that it's working. The archiving part can be verified by looking for a small blue arrow next to the build number in the overview. Make sure you get your Jar file with you there.
-
-### 7. Archiving
-
-We also need to get the javadoc generated for the project.
-
-Fortunately that can be done with a small `mvn site` command.
-
-* Create another stage called `Javadoc` where you execute the above command, and archive the result in the `target/javadoc` folder.
-* Archive the `target/gildedrose-*.jar` as well
-
-### 8. Dockerize this
-
-Now we have a fully functional pipeline, but it's not very nice to run `mvn` commands directly on the Jenkins machine. These commands can be run inside a docker container and produce the exact same result. Then we won't need to worry about installing and managing Maven versions on our virtual machine.
+**Task:**
 
 * Convert your `mvn` steps to run inside docker containers
 
-Hints
-* Use the `maven:3-jdk-8` docker image
-* Use `-i` instead of `-d`. We want to be in interactive mode, and wait for the command to execute.
-* `$PWD` will give you the path to the current directory. If you mount the current directory into the container and execute the command in that volume, it will be the same as running the command locally on the machine. To achieve this, add the following to your `docker run` command: `-v $PWD:/usr/src/mymaven -w /usr/src/mymaven`
-* Add `--rm` to your `docker run` command to make it delete itself when done executing. This is how you avoid old stopped containers filling up on the machine.
+* remove the build step `Invoke top-level Maven targets` that before took care of invoking Maven.
+* Make a docker container run the build by adding a `Execute shell` build step with the following command: `docker run -i -v $PWD:/usr/src/mymaven -w /usr/src/mymaven --rm maven:3-jdk-8 mvn test`
 
-### 9. Multibranch pipeline
+> Info: if you are not familiar with all the ins and outs of docker, here is a small rundown of the command:
+>* Use the `maven:3-jdk-8` docker image
+>* Use the `-i` parameter to get std in and error out to the terminal. Stands for `interactive`.
+>* `$PWD` will give you the path to the current directory. If you mount the current directory into the container and execute the command in that volume, it will be the same as running the command locally on the machine. The command is  `-v $PWD:/usr/src/mymaven -w /usr/src/mymaven`.
+>* Add `--rm` to make the container delete itself when done executing. This is how you avoid old stopped containers filling up on the machine.
+>*`mvn test` is the command to start maven and run the test goal.
 
-Having your pipeline as code is good, but having it under version control is better!
+* Click save, and then `build now`.
+* Go into the console output like last time, and see that maven runs your tests, but in a docker container.
+* Try to make a test fail, push the change, and see that the pipeline is still fully functional.
 
-Fortuneatly, Jenkins makes this possible.
+Now we are ready to take our code to next level infrastructure, making it *as code*, *versioned*, and finally able to maintain a green master with *pretested integration*!
 
-First of, go in and `Configure` your pipeline job, disabling any build triggers you might have set.
+### 4 code it
 
-In the root of the repository there is a file called `Jenkinsfile`.
+We want to reduce the amount of UI click to a bare minimum. Therefore we introduce a new job type `pipeline` to script the CI/CD workload. Head over to [pipeline/single_branch](pipeline/single_branch.md) to learn more.
 
-Right now it only has a dumb `hello world`
+### 5 version it
 
-* Take your pipeline script, and replace the files content with it.
-* Replace the git command with `checkout scm`. Multibranch knows where it gets triggered from.
-* Push that back to the repository
-* Create a new job of the `multibranch pipeline` type, and configure that to take from your repository.
-* Trigger it to see that it works.
-* Make a new branch locally, and push it up to GitHub to see that it automatically makes a new pipeline for you as well.
+Can you remember how your pipeline looked like a year ago? Even if you do, having your pipeline versioned together with your code makes it a no-brainer building old revisions of your code. And it even works with multiple branches, so head over and make your pipeline [multibranch compliant](pipeline/multibranch.md).
 
-### 10. Pretested integration
+### 6 Pretested integration
 
 Head over to [the pretested readme](pretested/README.md) to fulfill this part of the exercises.
 
-### Xtra. Parallel and stashing
-Now we have two processes that actually can be run in parallel. The `build` and `javadoc` steps both take in the sourcecode and produces artifacts. So lets try to run them in parallel.
-
-> This assignment is loosely formulated, so you need to [look things up yourself](https://jenkins.io/doc/pipeline/steps/) in order to complete this one
-
-* Stash the source code cloned in `Preparation` and call it source
-* `build` and `javadoc` steps needs to be included in a parallel step like the one below
-
-```groovy
-def builders = [
-	"build": {
-		node {}
-	},
-	"javadoc": {
-	node {}
-	}
-]
-stage('parallel'){
-	parallel builders
-}
-```
-
-* Unstash the source code in both stages, and perform the normal build steps
-* Stash the results instead of archiving. Call them `jar` and `javadoc`
-* Unstash them in the `Results` step in the end where you archive them.
-
-# DONE!
+**DONE!**
 
 **That's it!** You rock at this!
-If you have more time, and want to make a real pipeline with pretested integration, then read our story about [pipeline vs old fashioned jobs](http://www.praqma.com/stories/jenkins-pipeline/) and try to incorporate the script into your own pipeline!
