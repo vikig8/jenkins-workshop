@@ -131,7 +131,7 @@ We want to reduce the amount of UI click to a bare minimum. Therefore we introdu
 
 ### 5 version it
 
-Can you remember how your pipeline looked like a year ago? Even if you do, having your pipeline versioned together with your code makes it a no-brainer building old revisions of your code. And it even works with multiple branches, so head over and make your pipeline [multibranch compliant](pipeline/multibranch.md).
+Can you remember how your pipeline looked like a year ago? Even if you do, having your pipeline versioned together with your code makes it a no-brainer building old revisions of your code. And it even works with multiple branches, so head over and make your pipeline [multibranch compliant](pipeline/multi_branch.md).
 
 ### 6 Pretested integration
 
