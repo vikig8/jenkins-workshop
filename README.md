@@ -56,7 +56,13 @@ Head over to [setup readme](setup/README.md) to install jenkins on your server
 
 ## Exercises
 
-### 0. Authenticate Jenkins to GitHub
+### 0 Fork the repository
+
+We need you to be able to push changes up to this repository as you go along. Therefore you need your own fork to play with.
+
+* Fork of the [repository](https://github.com/praqma-training/jenkins-workshop) to obtain your own version of the code.
+
+### 1 Authenticate Jenkins to GitHub
 
 We want to make Jenkins talk to GitHub, in order for it to push and pull from your repositories. In order to do that, we need to set up an SSH key for the Jenkins server.
 
@@ -70,17 +76,11 @@ Tasks:
       write the passphrase you chose.
 * Save it.
 
-### 0.5 Fork the repository
-
-We need you to be able to push changes up to this repository as you go along. Therefore you need your own fork to play with.
-
-* Fork of the [repository](https://github.com/praqma-training/jenkins-workshop) to obtain your own version of the code.
-
-### 1 make a freestyle job
+### 2 make a freestyle job
 
 Head over to the [freestyle readme](freestyle/README.md) and follow the instructions there to setup your first Jenkins job.
 
-### 2 Implementing the Gilded Rose
+### 3 Implementing the Gilded Rose
 
 Look in  `src/test/java/net/praqma/codeacademy/gildedrose/TexttestFixture.java` for examples of items to use for tests.
 
@@ -89,7 +89,7 @@ Look in  `src/test/java/net/praqma/codeacademy/gildedrose/TexttestFixture.java` 
 
 Do this a couple of times to get comfortable with how Jenkins schedules and works on commits.
 
-### 3 Dockerize it
+### 4 Dockerize it
 
 Now we have a fully functional pipeline, but it's not very nice to run `mvn` commands directly on the Jenkins machine. 
 
@@ -117,15 +117,15 @@ So we want to run it in a controlled Docker container, making sure it's the same
 
 Now we are ready to take our code to next level infrastructure, making it *as code*, *versioned*, and finally able to maintain a green master with *pretested integration*!
 
-### 4 code it
+### 5 code it
 
 We want to reduce the amount of UI click to a bare minimum. Therefore we introduce a new job type `pipeline` to script the CI/CD workload. Head over to [pipeline/single_branch](pipeline/single_branch.md) to learn more.
 
-### 5 version it
+### 6 version it
 
-Can you remember how your pipeline looked like a year ago? Even if you do, having your pipeline versioned together with your code makes it a no-brainer building old revisions of your code. And it even works with multiple branches, so head over and make your pipeline [multibranch compliant](pipeline/multibranch.md).
+Can you remember how your pipeline looked like a year ago? Even if you do, having your pipeline versioned together with your code makes it a no-brainer building old revisions of your code. And it even works with multiple branches, so head over and make your pipeline [multibranch compliant](pipeline/multi_branch.md).
 
-### 6 Pretested integration
+### 7 Pretested integration
 
 Head over to [the pretested readme](pretested/README.md) to fulfill this part of the exercises.
 
