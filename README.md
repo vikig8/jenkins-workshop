@@ -1,7 +1,8 @@
 # Welcome
-This readme have three different parts:
 
-* [The assignemt](#coding-assignment) : if you do not know guilded rose, then read this before starting the programming exercise. If you know it, just skip this.
+This workshop have three different parts:
+
+* [The assignment](#coding-assignment) : if you do not know gilded rose, then read this before starting the programming exercise. If you know it, just skip this.
 * [The setup](#setup) : Installs the tools on you Linux server that you need in order to run the assignment.
 * [The exercises](#exercises) : The Jenkins excercises. When you have done the setup, then start here.
 
@@ -51,16 +52,7 @@ legendary item and as such its Quality is 80 and it never alters.
 
 ## Setup
 
-Before this task, we expect you to have been through the basic Jenkins material and have the infrastructure set up from that.
-
-We also at this point need to make sure that jenkins is a member of the docker group so it can execute docker commands.
-
-If not, then run the following commands:
-
-    sudo usermod -aG docker jenkins
-    sudo systemctl restart jenkins
-
-That should make Jenkins able to spin up docker images.
+Head over to [setup readme](setup/README.md) to install jenkins on your server
 
 ## Exercises
 
