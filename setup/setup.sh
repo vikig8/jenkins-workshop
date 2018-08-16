@@ -18,7 +18,7 @@ sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sour
 sudo apt update
 sudo apt install jenkins -y
 
-
+sleep 10
 echo "your secret jenkins password is:"
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
