@@ -102,7 +102,7 @@ So we want to run it in a controlled Docker container, making sure it's the same
 * Convert your `mvn` steps to run inside docker containers
 
 * remove the build step `Invoke top-level Maven targets` that before took care of invoking Maven.
-* Make a docker container run the build by adding a `Execute shell` build step with the following command: `docker run -i -v $PWD:/usr/src/mymaven -w /usr/src/mymaven --rm maven:3-jdk-8 mvn test`
+* Make a docker container run the build by adding a `Execute shell` build step with the following command: `docker run -i -u "$(id -u):$(id -g)" -v $PWD:/usr/src/mymaven -w /usr/src/mymaven --rm maven:3-jdk-8 mvn test`
 
 > Info: if you are not familiar with all the ins and outs of docker, here is a small rundown of the command:
 >* Use the `maven:3-jdk-8` docker image
